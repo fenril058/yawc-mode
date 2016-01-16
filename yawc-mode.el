@@ -76,7 +76,7 @@ the mode-line."
 (define-minor-mode yawc-mode
   "Minor-mode which display the total number of characters,
 words, and lines in the mode-line. If you use region, those in
-the region are displaied."
+the region are displayed."
   :group      'yawc
   :init-value nil
   :global     nil
