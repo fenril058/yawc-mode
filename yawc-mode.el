@@ -34,41 +34,47 @@
 the mode-line."
   :group 'mode-line)
 
-(defcustom yawc-mode-jp-format nil
+(defcustom yawc-mode-jp nil
   "non-nilならば、`yawc-mode-line-format-jp' によってモード
 ラインに表示します。デフォルトの形式は%d文字%d行です。文字数に改
 行は含みません。"
   :group 'yawc)
 
-(make-variable-buffer-local 'yawc-mode-jp-format)
+(make-variable-buffer-local 'yawc-mode-jp)
 
 (defvar yawc-mode-line-format
-  '((yawc-mode
-     (6 (:eval (if (use-region-p)
-                   (format " %d,%d,%d"
-                           (abs (- (point) (mark)))
-                           (count-words-region (point) (mark))
-                           (abs (+ (- (line-number-at-pos (point))
-                                      (line-number-at-pos (mark))) 1)))
-                 (format " %d,%d,%d"
-                         (point-max)
-                         (count-words-region (point-min) (point-max))
-                         (line-number-at-pos (point-max))))))
-     nil)))
+      '(if (use-region-p)
+           (format " %d,%d,%d"
+                   (abs (- (point) (mark)))
+                   (count-words-region (point) (mark))
+                   (abs (+ (- (line-number-at-pos (point))
+                              (line-number-at-pos (mark))) 1)))
+         (format " %d,%d,%d"
+                 (point-max)
+                 (count-words-region (point-min) (point-max))
+                 (line-number-at-pos (point-max)))))
 
 (defvar yawc-mode-line-format-jp
-  '((yawc-mode
-     (6 (:eval (if (use-region-p)
-                   (format " %d文字%d行"
-                           (abs (- (point) (mark)))
-                           (abs (+ (- (line-number-at-pos (point))
-                                      (line-number-at-pos (mark))) 1)))
-                 (let* ((pmax (point-max))
-                        (lnap (line-number-at-pos pmax)))
-                   (format " %d文字%d行"
-                           (- pmax lnap)
-                           lnap
-                           )))))
+  '(if (use-region-p)
+       (format " %d文字%d行"
+               (abs (- (point) (mark)))
+               (abs (+ (- (line-number-at-pos (point))
+                          (line-number-at-pos (mark))) 1)))
+     (let* ((pmax (point-max))
+            (lnap (line-number-at-pos pmax)))
+       (format " %d文字%d行"
+               (- pmax lnap)
+               lnap
+               )))
+  )
+
+(defvar yawc-mode-display-style
+      `((yawc-mode
+         (6 (:eval
+             (if yawc-mode-jp
+                 ,yawc-mode-line-format-jp
+               ,yawc-mode-line-format
+                 )))
      nil)
     ))
 
@@ -83,10 +89,7 @@ the region are displayed."
   :lighter    ""
   (if yawc-mode
       (setq mode-line-position
-            (append mode-line-position
-                    (if yawc-mode-jp-format
-                        yawc-mode-line-format-jp
-                      yawc-mode-line-format)))
+            (append mode-line-position yawc-mode-display-style))
     (setq mode-line-position
           (assq-delete-all 'yawc-mode mode-line-position))
     ))
