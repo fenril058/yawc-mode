@@ -3,8 +3,8 @@
 ;; Copyright (C) 2016  ril
 
 ;; Author: ril
-;; Created: 16 Jun 2016
-;; Last Modified: 16 Sep 2016
+;; Created: 2016-01-16 12:00:00
+;; Last Modified: 2016-01-17 10:10:15
 ;; Version: 1.0
 ;; Keywords: convenience, mode line
 ;; URL: https://github.com/fenril058/yawc-mode
@@ -41,6 +41,18 @@ the mode-line."
   :group 'yawc)
 
 (make-variable-buffer-local 'yawc-mode-jp)
+
+(defcustom yawc-use-disable-list nil
+  "If nil, global-yawc-mode enables yawc-mode in the modes which
+are the member of `yawc-enable-modes'. If non-nil, global-yawc-mode
+enables yawc-mode in all modes except in `yawc-disable-modes'. "
+  :group 'yawc)
+
+(defvar yawc-enable-modes '(org-mode)
+  "Major modes which `yawc-mode' can run on.")
+
+(defvar yawc-disable-modes '(lisp-interaction-mode)
+  "Major modes which `yawc-mode' can not run on.")
 
 (defvar yawc-mode-line-format
       '(if (use-region-p)
@@ -88,11 +100,24 @@ the region are displayed."
   :global     nil
   :lighter    ""
   (if yawc-mode
-      (setq mode-line-position
-            (append mode-line-position yawc-mode-display-style))
+      (add-to-list 'mode-line-position yawc-mode-display-style t)
     (setq mode-line-position
           (assq-delete-all 'yawc-mode mode-line-position))
     ))
+
+(defun yawc-mode-maybe ()
+  "What buffer `yawc-mode' prefers."
+  (when (and (not (minibufferp (current-buffer)))
+             (if yawc-use-disable-list
+                 (not (memq major-mode yawc-disable-modes))
+               (memq major-mode yawc-enable-modes))
+             (yawc-mode 1)
+             )))
+
+;;;###autoload
+(define-global-minor-mode global-yawc-mode
+  yawc-mode yawc-mode-maybe
+  :group 'yawc)
 
 (provide 'yawc-mode)
 ;;; yawc-mode.el ends here
