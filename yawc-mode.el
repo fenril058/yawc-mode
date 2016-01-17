@@ -5,7 +5,7 @@
 ;; Author: ril
 ;; Created: 2016-01-16 12:00:00
 ;; Last Modified: 2016-01-17 10:10:15
-;; Version: 1.0
+;; Version: 1.1
 ;; Keywords: convenience, mode line
 ;; URL: https://github.com/fenril058/yawc-mode
 
