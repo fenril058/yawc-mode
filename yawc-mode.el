@@ -4,7 +4,7 @@
 
 ;; Author: ril
 ;; Created: 2016-01-16 12:00:00
-;; Last Modified: 2016-01-17 10:10:15
+;; Last Modified: 2016-01-19 00:06:28
 ;; Version: 1.1
 ;; Keywords: convenience, mode line
 ;; URL: https://github.com/fenril058/yawc-mode
@@ -55,16 +55,16 @@ enables yawc-mode in all modes except in `yawc-disable-modes'. "
   "Major modes which `yawc-mode' can not run on.")
 
 (defvar yawc-mode-line-format
-      '(if (use-region-p)
-           (format " %d,%d,%d"
-                   (abs (- (point) (mark)))
-                   (count-words-region (point) (mark))
-                   (abs (+ (- (line-number-at-pos (point))
-                              (line-number-at-pos (mark))) 1)))
-         (format " %d,%d,%d"
-                 (point-max)
-                 (count-words-region (point-min) (point-max))
-                 (line-number-at-pos (point-max)))))
+  '(if (use-region-p)
+       (format " %d,%d,%d"
+               (abs (- (point) (mark)))
+               (count-words-region (point) (mark))
+               (abs (+ (- (line-number-at-pos (point))
+                          (line-number-at-pos (mark))) 1)))
+     (format " %d,%d,%d"
+             (point-max)
+             (count-words-region (point-min) (point-max))
+             (line-number-at-pos (point-max)))))
 
 (defvar yawc-mode-line-format-jp
   '(if (use-region-p)
@@ -81,14 +81,22 @@ enables yawc-mode in all modes except in `yawc-disable-modes'. "
   )
 
 (defvar yawc-mode-display-style
-      `((yawc-mode
-         (6 (:eval
-             (if yawc-mode-jp
-                 ,yawc-mode-line-format-jp
-               ,yawc-mode-line-format
-                 )))
-     nil)
-    ))
+  `(yawc-mode
+    (6 (:eval
+        (if yawc-mode-jp
+            ,yawc-mode-line-format-jp
+          ,yawc-mode-line-format
+          )))
+    nil)
+  )
+
+(add-to-list 'mode-line-position yawc-mode-display-style t)
+
+(defun yawc-mode-line-position-cleanup ()
+  (interactive)
+  (setq mode-line-position
+        (assq-delete-all 'yawc-mode mode-line-position))
+  )
 
 ;;;###autoload
 (define-minor-mode yawc-mode
@@ -99,11 +107,7 @@ the region are displayed."
   :init-value nil
   :global     nil
   :lighter    ""
-  (if yawc-mode
-      (add-to-list 'mode-line-position yawc-mode-display-style t)
-    (setq mode-line-position
-          (assq-delete-all 'yawc-mode mode-line-position))
-    ))
+  )
 
 (defun yawc-mode-maybe ()
   "What buffer `yawc-mode' prefers."
