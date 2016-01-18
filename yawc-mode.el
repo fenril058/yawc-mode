@@ -4,7 +4,7 @@
 
 ;; Author: ril
 ;; Created: 2016-01-16 12:00:00
-;; Last Modified: 2016-01-19 00:06:28
+;; Last Modified: 2016-01-19 00:11:23
 ;; Version: 1.1
 ;; Keywords: convenience, mode line
 ;; URL: https://github.com/fenril058/yawc-mode
@@ -56,25 +56,25 @@ enables yawc-mode in all modes except in `yawc-disable-modes'. "
 
 (defvar yawc-mode-line-format
   '(if (use-region-p)
-       (format " %d,%d,%d"
+       (format "%d,%d,%d"
                (abs (- (point) (mark)))
                (count-words-region (point) (mark))
                (abs (+ (- (line-number-at-pos (point))
                           (line-number-at-pos (mark))) 1)))
-     (format " %d,%d,%d"
+     (format "%d,%d,%d"
              (point-max)
              (count-words-region (point-min) (point-max))
              (line-number-at-pos (point-max)))))
 
 (defvar yawc-mode-line-format-jp
   '(if (use-region-p)
-       (format " %d文字%d行"
+       (format "%d文字%d行"
                (abs (- (point) (mark)))
                (abs (+ (- (line-number-at-pos (point))
                           (line-number-at-pos (mark))) 1)))
      (let* ((pmax (point-max))
             (lnap (line-number-at-pos pmax)))
-       (format " %d文字%d行"
+       (format "%d文字%d行"
                (- pmax lnap)
                lnap
                )))
