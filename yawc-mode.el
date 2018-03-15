@@ -4,7 +4,7 @@
 
 ;; Author: ril
 ;; Created: 2016-01-16 12:00:00
-;; Last Modified: 2016-01-19 00:11:23
+;; Last Modified: 2016-01-22 00:45:18
 ;; Version: 1.1
 ;; Keywords: convenience, mode line
 ;; URL: https://github.com/fenril058/yawc-mode
@@ -96,6 +96,11 @@ enables yawc-mode in all modes except in `yawc-disable-modes'. "
   (interactive)
   (setq mode-line-position
         (assq-delete-all 'yawc-mode mode-line-position))
+  )
+
+(defun yawc-mode-line-position-set ()
+  (interactive)
+  (add-to-list 'mode-line-position 'yawc-mode t)
   )
 
 ;;;###autoload
