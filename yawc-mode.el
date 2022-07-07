@@ -4,7 +4,7 @@
 
 ;; Author: ril
 ;; Created: 2016-01-16 12:00:00
-;; Last Modified: 2016-01-22 00:45:18
+;; Last Modified: 2022-07-07 21:50:48
 ;; Version: 1.1
 ;; Keywords: convenience, mode line
 ;; URL: https://github.com/fenril058/yawc-mode
@@ -38,6 +38,7 @@ the mode-line."
   "non-nilならば、`yawc-mode-line-format-jp' によってモード
 ラインに表示します。デフォルトの形式は%d文字%d行です。文字数に改
 行は含みません。"
+  :type 'boolean
   :group 'yawc)
 
 (make-variable-buffer-local 'yawc-mode-jp)
@@ -46,13 +47,18 @@ the mode-line."
   "If nil, global-yawc-mode enables yawc-mode in the modes which
 are the member of `yawc-enable-modes'. If non-nil, global-yawc-mode
 enables yawc-mode in all modes except in `yawc-disable-modes'. "
+  :type 'boolean
   :group 'yawc)
 
-(defvar yawc-enable-modes '(org-mode)
-  "Major modes which `yawc-mode' can run on.")
+(defcustom yawc-enable-modes '(org-mode)
+  "Major modes which `yawc-mode' can run on."
+  :type 'list
+  :group 'yawc)
 
-(defvar yawc-disable-modes '(lisp-interaction-mode)
-  "Major modes which `yawc-mode' can not run on.")
+(defcustom yawc-disable-modes '(lisp-interaction-mode)
+  "Major modes which `yawc-mode' can not run on."
+  :type 'list
+  :group 'yawc)
 
 (defvar yawc-mode-line-format
   '(if (use-region-p)
