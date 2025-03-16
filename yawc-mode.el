@@ -1,13 +1,13 @@
 ;;; yawc-mode.el --- yet another wc-mode -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2016  ril
+;; Copyright (C) 2016-2025  ril
 
 ;; Author: ril
 ;; Created: 2016-01-16 12:00:00
-;; Last Modified: 2022-07-07 21:52:50
 ;; Version: 1.1
-;; Keywords: convenience, mode line
+;; Package-Requires: ((emacs "24.1"))
 ;; URL: https://github.com/fenril058/yawc-mode
+;; Keywords: convenience, mode line
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -26,7 +26,7 @@
 
 ;; A simple minor-mode to display the length of the buffer in the mode
 ;; line. This is deeply based on the wc-mode which made by Toby
-;; Cubitt.  URL: http://www.dr-qubit.org/emacs.php
+;; Cubitt.  URL: https://www.dr-qubit.org/emacs-misc/wc-mode.el
 
 ;;; Code:
 (defgroup yawc nil
@@ -52,12 +52,17 @@ enables yawc-mode in all modes except in `yawc-disable-modes'. "
 
 (defcustom yawc-enable-modes '(org-mode)
   "Major modes which `yawc-mode' can run on."
-  :type 'list
+  :type '(repeat symbol)
   :group 'yawc)
 
 (defcustom yawc-disable-modes '(lisp-interaction-mode)
   "Major modes which `yawc-mode' can not run on."
-  :type 'list
+  :type '(repeat symbol)
+  :group 'yawc)
+
+(defcustom yawc-mode-lighter ""
+  "Lighter for yawc-mode"
+  :type 'string
   :group 'yawc)
 
 (defvar yawc-mode-line-format
@@ -117,17 +122,18 @@ the region are displayed."
   :group      'yawc
   :init-value nil
   :global     nil
-  :lighter    ""
+  :lighter    'yawc-mode-lighter
   )
 
 (defun yawc-mode-maybe ()
   "What buffer `yawc-mode' prefers."
-  (when (and (not (minibufferp (current-buffer)))
-             (if yawc-use-disable-list
-                 (not (memq major-mode yawc-disable-modes))
-               (memq major-mode yawc-enable-modes))
-             (yawc-mode 1)
-             )))
+  (and (not (minibufferp (current-buffer)))
+       (if yawc-use-disable-list
+           (not (memq major-mode yawc-disable-modes))
+         (memq major-mode yawc-enable-modes))
+       (yawc-mode 1)
+       )
+  )
 
 ;;;###autoload
 (define-global-minor-mode global-yawc-mode
